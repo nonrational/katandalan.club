@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to the Club</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #fdf6e3;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin: 0.5rem;
+      color: #333;
+    }
+
+    .car {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      background: #3498db;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: moveCar 5s infinite alternate ease-in-out;
+    }
+
+    .car::before, .car::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      width: 30px;
+      height: 30px;
+      background: #2c3e50;
+      border-radius: 50%;
+    }
+
+    .car::before {
+      left: 10px;
+    }
+
+    .car::after {
+      right: 10px;
+    }
+
+    .car .window {
+      position: absolute;
+      top: 10px;
+      width: 80%;
+      height: 50%;
+      background: #ecf0f1;
+      border-radius: 10px;
+    }
+
+    .car .people {
+      width: 90%;
+      display: flex;
+      justify-content: space-evenly;
+      position: absolute;
+      bottom: 25%;
+    }
+
+    .person {
+      width: 10px;
+      height: 20px;
+      background: #e74c3c;
+      border-radius: 50%;
+    }
+
+    .person.small {
+      background: #f39c12;
+      height: 15px;
+    }
+
+    @keyframes moveCar {
+      from {
+        transform: translateX(-100px);
+      }
+      to {
+        transform: translateX(100px);
+      }
+    }
+
+    .contact {
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .email {
+      color: #3498db;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Club</h1>
+  <div class="car">
+    <div class="window"></div>
+    <div class="people">
+      <div class="person"></div>
+      <div class="person"></div>
+      <div class="person small"></div>
+      <div class="person small"></div>
+    </div>
+  </div>
+  <p class="contact">Contact us at <a href="mailto:hello@katandalan.club" class="email">hello@katandalan.club</a>.</p>
+</body>
+</html>
