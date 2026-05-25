@@ -59,6 +59,9 @@
   .spr{ position:absolute; top:-24px; width:5px; height:14px; border-radius:6px; opacity:0; animation:fall linear infinite; }
   @keyframes fall{ 0%{transform:translateY(0) rotate(0);opacity:0} 8%{opacity:.95} 92%{opacity:.9} 100%{transform:translateY(112vh) rotate(720deg);opacity:0} }
 
+  .burst-spr{ position:fixed; z-index:90; pointer-events:none; border-radius:6px; transform-origin:center; animation:burst-anim .8s cubic-bezier(.1,.8,.3,1) forwards; }
+  @keyframes burst-anim { 0%{transform:translate(-50%,-50%) rotate(0deg) scale(1);opacity:1} 100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) rotate(var(--rot)) scale(.6);opacity:0} }
+
   .wrap{
     position:relative; z-index:3; min-height:100vh;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -109,8 +112,8 @@
     transform:translateX(-50%); transform-origin:center bottom;
     cursor:pointer; transition:transform .4s cubic-bezier(.2,.8,.25,1), filter .4s;
     filter:drop-shadow(0 -4px 10px rgba(0,0,0,.4));
-    animation:rise-in 1s ease 2.2s backwards;
   }
+  .envelope.initial{ animation:rise-in 1s ease 2.2s backwards; }
   .envelope:hover{ transform:translateX(-50%) translateY(-12px); filter:drop-shadow(0 -6px 14px rgba(0,0,0,.5)); }
   .envelope.posting{ animation:post .9s cubic-bezier(.6,0,.4,1) forwards; cursor:default; pointer-events:none; }
   .envelope.rising{ animation:rise .85s cubic-bezier(.2,.8,.25,1) both; cursor:default; pointer-events:none; }
@@ -227,7 +230,7 @@
 <div class="hint" id="hint">Post a letter &#8595;</div>
 
 <!-- envelope peeks out of the slit — behind slot-front(60), in front of slot-back(20) -->
-<div class="envelope" id="envelope" title="Drop us a line">
+<div class="envelope initial" id="envelope" title="Drop us a line">
   <div class="env-body"></div>
   <div class="env-flap"></div>
   <div class="env-seal">K&amp;A</div>
@@ -264,9 +267,14 @@
     var hint = document.getElementById('hint');
     var busy = false, lastMail = 0;
 
+    env.addEventListener('animationend', function(e){
+      if(e.animationName === 'rise-in') env.classList.remove('initial');
+    });
+
     env.addEventListener('click', function(){
       if (busy) return;
       busy = true;
+      env.classList.remove('initial');
       hint.classList.add('spent');
       env.classList.add('posting');
 
@@ -288,6 +296,31 @@
       });
     });
   })();
+
+  // click burst
+  document.addEventListener('click', function(e){
+    var colors = ['#e7c869','#f3ead2','#e8746c','#5fb89a','#c98ed1','#67b7d4','#cda434'];
+    var n = 15 + Math.random()*15;
+    var cont = document.createElement('div');
+    document.body.appendChild(cont);
+    for(var i=0; i<n; i++){
+      var s = document.createElement('div');
+      s.className = 'burst-spr';
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      s.style.background = colors[(Math.random()*colors.length)|0];
+      var angle = Math.random() * Math.PI * 2;
+      var velocity = 60 + Math.random() * 80;
+      s.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px');
+      s.style.setProperty('--ty', (Math.sin(angle) * velocity + 50) + 'px');
+      s.style.setProperty('--rot', ((Math.random() - 0.5) * 720) + 'deg');
+      var w = 3 + Math.random()*4;
+      s.style.width = w+'px'; s.style.height = (w*2.6)+'px';
+      if (Math.random()<.3){ s.style.borderRadius='50%'; s.style.height=w+'px'; }
+      cont.appendChild(s);
+    }
+    setTimeout(function(){ if(cont.parentNode) cont.parentNode.removeChild(cont); }, 900);
+  });
 </script>
 </body>
 </html>
